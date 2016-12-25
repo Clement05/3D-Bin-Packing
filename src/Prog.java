@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -12,18 +14,22 @@ public class Prog {
 		myChamber.Fill(allParts);
 		myChamber.DisplayIDofPartsInList();
 		System.out.println(myChamber.allParts.size());
-		
+		//Util.WriteFile(res);
 		
 		int numberOfParts = myChamber.allParts.size();
-		while (numberOfParts < 5) {
+		while (numberOfParts < 10) {
 			myChamber.allParts.clear();
 			Collections.shuffle(allParts);
-			myChamber.Fill(allParts);
+			LinkedList<String> res = myChamber.Fill(allParts);
 			
 			myChamber.DisplayIDofPartsInList();
 			
 			System.out.println(myChamber.allParts.size());
 			numberOfParts = myChamber.allParts.size();
+			
+			if(numberOfParts == 10){
+				Util.WriteFile(res);
+			}
 		}
 	}
 	

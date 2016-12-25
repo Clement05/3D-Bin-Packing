@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 
@@ -39,5 +40,17 @@ public class Util {
 			e.printStackTrace();
 		}
 		 return res;
+	}
+	
+	public static void WriteFile(LinkedList<String> console){
+		try{
+		    PrintWriter writer = new PrintWriter("C:/Users/girarcle/AppData/Roaming/FreeCAD/Macro/Nesting.FCMacro", "UTF-8");
+		    for (String string : console) {
+		    	writer.println(string);
+			}
+		    writer.close();
+		} catch (IOException e) {
+		   // do something
+		}
 	}
 }

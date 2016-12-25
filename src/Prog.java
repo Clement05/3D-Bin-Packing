@@ -8,13 +8,14 @@ public class Prog {
 	public static void main(String[] args) {
 		LinkedList<Part> allParts;
 		
-		allParts = Util.GeneratePartFromFileInput("C:/Users/girarcle/Desktop/instance1.txt");
+		allParts = Util.GeneratePartFromFileInput("C:/Users/girarcle/Desktop/instance2.txt");
 		Chamber myChamber = new Chamber(0,0,0,0,10,10,10);
 		
 		myChamber.Fill(allParts);
 		myChamber.DisplayIDofPartsInList();
 		System.out.println(myChamber.allParts.size());
 		//Util.WriteFile(res);
+		
 		
 		int numberOfParts = myChamber.allParts.size();
 		while (numberOfParts < 10) {

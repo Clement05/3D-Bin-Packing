@@ -10,166 +10,113 @@ public class Chamber extends Box{
 
 	public LinkedList<String> Fill(LinkedList<Part> allParts){
 		LinkedList<String> console = new LinkedList<String>();
+		//Current values for the local origin (only for displaying)
 		int currX = 0;
 		int currY = 0;
 		int currZ = 0;
 		
-		int maxX = 0;
-		int maxY = 0;
-		int maxZ = 0;
+		//Local maximum value for a row
+		int localMaxY = 0;
+		//local maximum value for a layer
+		int localMaxZ = 0;
 		
-		int minX = 0;
-		int minY = 0;
-		int minZ = 0;
-		
-		int nextX = 0;
-		int nextY = 0;
-		int nextZ = 0;
-		
-		int remainX = 10;
-		int remainY = 10;
-		int remainZ = 10;
+		//Remaining sapce on axis
+		int remainX = this.getX2();
+		int remainY = this.getY2();
+		int remainZ = this.getZ2();
 		
 		console.add("doc = App.ActiveDocument");
+		
 		for (int i = 0; i < allParts.size(); i++){
 			
-			if(IsSpaceOnX(allParts.get(i), remainX)){
-				if(IsSpaceOnY(allParts.get(i), remainY)){
-					if(IsSpaceOnZ(allParts.get(i), remainZ)){
+			//If there is space on X
+			if(allParts.get(i).getX2() <= remainX){
+				if(allParts.get(i).getY2() <= remainY){
+					if(allParts.get(i).getZ2() <= remainZ){
+						//Set local max Z
+						localMaxZ = Math.max(localMaxZ,allParts.get(i).getZ2());
+						//Set local max Y
+						localMaxY = Math.max(localMaxY,allParts.get(i).getY2());
 						
-						GeneratePythonLine(allParts.get(i), console);
-						this.allParts.add(allParts.get(i));
-						GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
-						
-						//add on x
-						nextX = allParts.get(i).x2;
-						nextY = Math.max(nextY, allParts.get(i).y2);
-						nextZ = Math.max(nextZ, allParts.get(i).z2);
-						
-						remainX -= nextX;
-						currX += allParts.get(i).x2;
-					}
-				} else {
-					remainY = 10;
-					remainZ -= nextZ;
-					remainX = 10;
-					currY = 0;
-					currZ = nextZ;
-					currX = 0;
-					if(IsSpaceOnZ(allParts.get(i), remainZ)){
-						System.out.println("Change layer");
-						
-						GeneratePythonLine(allParts.get(i), console);
-						this.allParts.add(allParts.get(i));
-						GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
-						
-						//add on x
-						nextX = allParts.get(i).x2;
-						nextY += allParts.get(i).y2;
-						nextZ += allParts.get(i).z2;
-						
-						remainX -= nextX;
-					}
-				}
-			} else {
-				remainY = 10 - nextY;
-				remainZ = 10 - nextZ;
-				remainX = 10;
-				currY = nextY;
-				currZ = 0;
-				currX = 0;			
-				if(IsSpaceOnY(allParts.get(i), remainY)){
-					System.out.println("Change row");
-					if(IsSpaceOnZ(allParts.get(i), remainZ)){
-						
-						GeneratePythonLine(allParts.get(i), console);
-						this.allParts.add(allParts.get(i));
-						GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
-						
-						//add on x
-						nextX = allParts.get(i).x2;
-						nextY += allParts.get(i).y2;
-						nextZ = Math.max(nextZ, allParts.get(i).z2);
-						
-						remainX -= nextX;
-						currX = allParts.get(i).x2;
-					}
-				} else {
-					remainY = 10;
-					remainZ = 10 - nextZ;
-					remainX = 10;
-					currY = 0;
-					currZ = nextZ;
-					currX = 0;
-					if(IsSpaceOnZ(allParts.get(i), remainZ)){
-						System.out.println("Change layer");
-						
-						GeneratePythonLine(allParts.get(i), console);
-						this.allParts.add(allParts.get(i));
-						GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
-						
-						//add on x
-						nextX = allParts.get(i).x2;
-						nextY += allParts.get(i).y2;
-						nextZ += allParts.get(i).z2;
-						
-						remainX -= nextX;
-						currX += allParts.get(i).x2;
+						//Add part to the chamber list
+			            this.allParts.add(allParts.get(i));
+			            
+			            //Decrease the remain X value with the value of the added part
+			            remainX -= allParts.get(i).getX2();
+			            
+			            //Generate Python lines for FreeCAD
+			            GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
+			            //Increment the value of current local origin with the length of the added part
+			            currX += allParts.get(i).getX2();
+			            
+			            //Continue
+			            continue;
 					}
 				}
 			}
-			/*
-			console.add("box"+allParts.get(i).id+" = doc.addObject('Part::Box','BOX_"+allParts.get(i).id+"')");
-			console.add("box"+allParts.get(i).id+".Length = "+allParts.get(i).x2 *10 );
-			console.add("box"+allParts.get(i).id+".Width = "+allParts.get(i).y2 * 10);
-			console.add("box"+allParts.get(i).id+".Height = "+allParts.get(i).z2 * 10);
 			
-			if ( currX + (allParts.get(i).x2 - allParts.get(i).x1) <= 10){
-				if ( currY + (allParts.get(i).y2 - allParts.get(i).y1) <= 10){
-					if ( currZ + (allParts.get(i).z2 - allParts.get(i).z1) <= 10){
-						this.allParts.add(allParts.get(i));
-						maxY = Math.max(maxY, allParts.get(i).y2);
-						maxZ = Math.max(maxZ, allParts.get(i).z2);
-						console.add("box"+allParts.get(i).id+".Placement.Base.x = " + currX * 10);
-						console.add("box"+allParts.get(i).id+".Placement.Base.y = " + currY * 10);
-						console.add("box"+allParts.get(i).id+".Placement.Base.z = " + currZ * 10);
-						currX += allParts.get(i).x2 - allParts.get(i).x1;	
-					}	
+			//If there is no space on X
+			//Update the remain Y value with the localMaxY value (corresponding to the local maximum of the current row)
+			remainY -= localMaxY;
+			//Reset current local origin X value to 0 because we are changing row or layer
+			currX = 0;
+			//If there is space on Y
+			if(allParts.get(i).getY2() <= remainY){
+				if(allParts.get(i).getZ2() <= remainZ){
+					//Set the current local origin Y value with the localMaxY value 
+					currY += localMaxY;
+					//Continue to set localMaxZ with previous value
+					localMaxZ = Math.max(localMaxZ,allParts.get(i).getZ2());
+					//Reset the calculation of localMaxY because we are starting a new row
+					localMaxY = Math.max(0,allParts.get(i).getY2());
+					//Reset remainX value
+					remainX = this.getX2();
+					
+					//Add part to the chamber list
+		            this.allParts.add(allParts.get(i)); 
+		            //Decrease the remain X value with the value of the added part
+		            remainX -= allParts.get(i).getX2();
+		            
+		            //Generate Python lines for FreeCAD
+		            GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
+		            //Increment the value of current local origin with the length of the added part
+		            currX += allParts.get(i).getX2();
+		            
+		            //Continue
+		            continue;
 				}
-				
-				else {
-
-					maxY = 0;
-					currZ = maxZ;
-					currY = 0;
-					currX = 0;
-					
-					console.add("box"+allParts.get(i).id+".Placement.Base.x = " + currX * 10);
-					console.add("box"+allParts.get(i).id+".Placement.Base.y = " + currY * 10);
-					console.add("box"+allParts.get(i).id+".Placement.Base.z = " + currZ * 10);
-					
-					currZ += allParts.get(i).z2 - allParts.get(i).z1;
-					
-					this.allParts.add(allParts.get(i));
-				}
+			}
 			
-			}	
-			
-			else {
-				currY = maxY;
-
-				currX = 0;
-				console.add("box"+allParts.get(i).id+".Placement.Base.x = " + currX * 10);
-				console.add("box"+allParts.get(i).id+".Placement.Base.y = " + currY * 10);
-				console.add("box"+allParts.get(i).id+".Placement.Base.z = " + currZ * 10);
+			//If there is no space on X and Y
+			//Update the remain Z value with the localMaxZ value (corresponding to the local maximum of the current layer)
+			remainZ -= localMaxZ;
+			if(allParts.get(i).getZ2() <= remainZ){
+				//Set the current local origin Z value with the localMaxZ value 
+				currZ += localMaxZ;
+				//Reset current local origin Y value to 0 because we are changing layer
+				currY = 0;
+				//Reset the calculation of localMaxZ because we are starting a new layer
+				localMaxZ = Math.max(0,allParts.get(i).getZ2());
+				//Reset the calculation of localMaxY because we are starting a new row
+				localMaxY = Math.max(0,allParts.get(i).getY2());
+				//Reset remainX value
+				remainX = this.getX2();
 				
-				currY += allParts.get(i).y2 - allParts.get(i).y1;
+				//Add part to the chamber list
+	            this.allParts.add(allParts.get(i));
+	            
+	            //Decrease the remain X value with the value of the added part
+	            remainX -= allParts.get(i).getX2();
+	            
+	            //Generate Python lines for FreeCAD
+	            GeneratePythonLine(allParts.get(i), console, currX, currY, currZ);
+	            //Increment the value of current local origin with the length of the added part
+	            currX += allParts.get(i).getX2();
+	            
+	            //Continue
+	            continue;
+			}
 				
-				this.allParts.add(allParts.get(i));
-
-				
-			}	
-			*/		
 		}
 		console.add("doc.recompute()");
 		
@@ -177,16 +124,13 @@ public class Chamber extends Box{
 	}
 
 	private void GeneratePythonLine(Part part, LinkedList<String> console, int currX, int currY, int currZ) {
-		console.add("box"+part.id+".Placement.Base.x = " + currX * 10);
-		console.add("box"+part.id+".Placement.Base.y = " + currY * 10);
-		console.add("box"+part.id+".Placement.Base.z = " + currZ * 10);	
-	}
-
-	private void GeneratePythonLine(Part part, LinkedList<String> console) {
 		console.add("box"+part.id+" = doc.addObject('Part::Box','BOX_"+part.id+"')");
 		console.add("box"+part.id+".Length = "+part.x2 *10 );
 		console.add("box"+part.id+".Width = "+part.y2 * 10);
 		console.add("box"+part.id+".Height = "+part.z2 * 10);
+		console.add("box"+part.id+".Placement.Base.x = " + currX * 10);
+		console.add("box"+part.id+".Placement.Base.y = " + currY * 10);
+		console.add("box"+part.id+".Placement.Base.z = " + currZ * 10);	
 	}
 
 	private boolean IsSpaceOnY(Part part, int remainY) {

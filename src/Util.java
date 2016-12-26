@@ -12,6 +12,10 @@ import java.util.LinkedList;
 
 public class Util {
 
+	//Function to generate list of parts from file input 
+	//Format in file:
+	//X1,Y1,Z1,X2,Y2,Z2
+	//Where previous value define bound box
 	public static LinkedList<Part> GeneratePartFromFileInput(String filePath){
 		LinkedList<Part> res = new LinkedList<Part>();
 		FileReader fileReader = null;
@@ -42,6 +46,7 @@ public class Util {
 		 return res;
 	}
 	
+	//Write console line in FreeCAD script
 	public static void WriteFile(LinkedList<String> console){
 		try{
 		    PrintWriter writer = new PrintWriter("C:/Users/girarcle/AppData/Roaming/FreeCAD/Macro/Instance.FCMacro", "UTF-8");

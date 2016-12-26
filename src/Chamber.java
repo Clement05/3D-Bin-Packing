@@ -101,6 +101,8 @@ public class Chamber extends Box{
 				localMaxY = Math.max(0,allParts.get(i).getY2());
 				//Reset remainX value
 				remainX = this.getX2();
+				//Reset remainY value
+				remainY = this.getY2();
 				
 				//Add part to the chamber list
 	            this.allParts.add(allParts.get(i));

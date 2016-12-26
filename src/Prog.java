@@ -7,28 +7,29 @@ public class Prog {
 
 	public static void main(String[] args) {
 		LinkedList<Part> allParts;
+		LinkedList<String> res;
 		
 		allParts = Util.GeneratePartFromFileInput("C:/Users/girarcle/Desktop/instance2.txt");
 		Chamber myChamber = new Chamber(0,0,0,0,10,10,10);
 		
-		myChamber.Fill(allParts);
+		res = myChamber.Fill(allParts);
 		myChamber.DisplayIDofPartsInList();
 		System.out.println(myChamber.allParts.size());
-		//Util.WriteFile(res);
+		Util.WriteFile(res);
 		
 		
 		int numberOfParts = myChamber.allParts.size();
-		while (numberOfParts < 10) {
+		while (numberOfParts < 11) {
 			myChamber.allParts.clear();
 			Collections.shuffle(allParts);
-			LinkedList<String> res = myChamber.Fill(allParts);
+			res = myChamber.Fill(allParts);
 			
 			myChamber.DisplayIDofPartsInList();
 			
 			System.out.println(myChamber.allParts.size());
 			numberOfParts = myChamber.allParts.size();
 			
-			if(numberOfParts == 10){
+			if(numberOfParts == 11){
 				Util.WriteFile(res);
 			}
 		}

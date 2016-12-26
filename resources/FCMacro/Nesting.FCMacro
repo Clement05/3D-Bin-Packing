@@ -1,0 +1,38 @@
+import time
+import subprocess
+
+#p = subprocess.Popen("java -jar C:/Users/user/Desktop/Nesting.jar optimize=true", shell=False)
+
+docToOpen = u"C:/Users/user/Downloads/master_sie_empty_box.FCStd"
+if App.ActiveDocument == None:
+	App.open(docToOpen)
+elif docToOpen == App.ActiveDocument.FileName:
+	App.closeDocument(App.ActiveDocument.Name)
+	App.open(docToOpen)
+	
+doc = App.ActiveDocument
+
+toBeDeleted = []
+for i in xrange(App.ActiveDocument.Objects.__len__()):
+	if App.ActiveDocument.Objects[i] not in App.ActiveDocument.Groupe.Group and App.ActiveDocument.Objects[i].TypeId != "App::DocumentObjectGroup":
+		toBeDeleted.append(App.ActiveDocument.Objects[i].Name)
+
+for elt in toBeDeleted:
+	App.ActiveDocument.removeObject(elt)
+
+execfile(u"C:/Users/girarcle/AppData/Roaming/FreeCAD/Macro/Instance.FCMacro")
+
+toBeDisplayed = []
+for i in xrange(App.ActiveDocument.Objects.__len__()):
+	if App.ActiveDocument.Objects[i] not in App.ActiveDocument.Groupe.Group and App.ActiveDocument.Objects[i].TypeId != "App::DocumentObjectGroup":
+		toBeDisplayed.append(App.ActiveDocument.Objects[i].Name)
+
+for elt in toBeDisplayed:
+	Gui.ActiveDocument.getObject(elt).Visibility = False
+
+for elt in toBeDisplayed:
+	time.sleep(0.5)
+	Gui.ActiveDocument.getObject(elt).Visibility = True
+	Gui.updateGui()
+
+

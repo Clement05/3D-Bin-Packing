@@ -135,32 +135,8 @@ public class Chamber extends Box{
 		console.add("box"+part.id+".Placement.Base.z = " + currZ * 10);	
 	}
 
-	private boolean IsSpaceOnY(Part part, int remainY) {
-		int width = part.y2 - part.y1;
-		if(remainY >= width){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean IsSpaceOnZ(Part part, int remainZ) {
-		int height = part.z2 - part.z1;
-		if(remainZ >= height){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean IsSpaceOnX(Part part, int remainX) {
-		int length = part.x2 - part.x1;
-		if(remainX >= length){
-			return true;
-		}
-		return false;
-	}
-
-	public void DisplayIDofPartsInList() {
-		String res = "";
+	public void DisplayStringResult(int allPartSize) {
+		String res = "There is "+this.allParts.size()+"/"+allPartSize +" parts ordered as: ";
 		for (Part part : allParts) {
 			res +=Integer.toString(part.id)+',';
 		}

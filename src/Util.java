@@ -14,7 +14,7 @@ public class Util {
 
 	public static LinkedList<Part> GeneratePartFromFileInput(String filePath){
 		LinkedList<Part> res = new LinkedList<Part>();
-		 FileReader fileReader = null;
+		FileReader fileReader = null;
 		try {
 			fileReader = new FileReader(new File(filePath));
 		} catch (FileNotFoundException e1) {
@@ -44,7 +44,7 @@ public class Util {
 	
 	public static void WriteFile(LinkedList<String> console){
 		try{
-		    PrintWriter writer = new PrintWriter("C:/Users/girarcle/AppData/Roaming/FreeCAD/Macro/Nesting.FCMacro", "UTF-8");
+		    PrintWriter writer = new PrintWriter("C:/Users/girarcle/AppData/Roaming/FreeCAD/Macro/Instance.FCMacro", "UTF-8");
 		    for (String string : console) {
 		    	writer.println(string);
 			}
